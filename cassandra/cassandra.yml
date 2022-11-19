@@ -1,0 +1,26 @@
+namespace: monk-cassandra
+
+cassandra:
+  metadata:
+    defines: metadata
+    name: Cassandra
+    description: Open Source NoSQL Database Manage massive amounts of data, fast, without losing sleep
+    website: https://cassandra.apache.org/
+    publisher: monk.io
+    icon: https://cassandra.apache.org/assets/img/logo-white.svg
+  defines: runnable
+  variables:
+    cassandra_cluster:
+      env: CASSANDRA_CLUSTER_NAME
+      type: string
+      value: monk
+    volume_local:
+      type: string
+      value: <- `${monk-volume-path}/cassandra`
+  containers:
+    monk-cassandra:
+      image: 'cassandra'
+      ports:
+        - <- `0.0.0.0:9042:9042`
+      paths:
+        - <- `${volume_local}:/var/lib/cassandra`

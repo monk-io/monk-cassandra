@@ -1,0 +1,57 @@
+namespace: monk-cassandra
+
+cassandra-common:
+  metadata:
+    defines: metadata
+    name: Cassandra
+    description: Open Source NoSQL Database Manage massive amounts of data, fast, without losing sleep
+    website: https://cassandra.apache.org/
+    publisher: monk.io
+    icon: https://cassandra.apache.org/assets/img/logo-white.svg
+  variables:
+    cassandra_cluster:
+      env: CASSANDRA_CLUSTER_NAME
+      type: string
+      value: <- `${cassandra-cluster}`
+    volume_local:
+      type: string
+      value: <- `${monk-volume-path}/cassandra`
+    cassandra_node1:
+      type: string
+      value: <- get-hostname("monk-cassandra/cassandra1", "monk-cassandra") split(".dns.podman") join("")
+    cassandra_node2:
+      type: string
+      value: <- get-hostname("monk-cassandra/cassandra2", "monk-cassandra") split(".dns.podman") join("")
+    cassanra_seeds:
+      env: CASSANDRA_SEEDS
+      type: string
+      value: <- `${cassandra_node1},${cassandra_node2}`
+    cassanra_password:
+      env: CASSANDRA_PASSWORD
+      type: string
+      value: <- `${cassanra-password}`
+
+cassandra1:
+  inherits: ./cassandra-common
+  defines: runnable
+  containers:
+    monk-cassandra:
+      image: 'bitnami/cassandra'
+      ports:
+        - <- `0.0.0.0:9042:9042`
+      paths:
+        - <- `${volume_local}/cassandra1:/bitnami`
+      environment:
+        - CASSANDRA_PASSWORD_SEEDER=yes
+
+
+cassandra2:
+  inherits: ./cassandra-common
+  defines: runnable
+  containers:
+    monk-cassandra:
+      image: 'bitnami/cassandra'
+      ports:
+        - <- `0.0.0.0:9043:9042`
+      paths:
+        - <- `${volume_local}/cassandra2:/bitnami`
