@@ -3,8 +3,8 @@ namespace: monk-cassandra
 stack:
   defines: process-group
   runnable-list:
-    - monk-cassandra/cassandra1
     - monk-cassandra/cassandra2
+    - monk-cassandra/cassandra1
   variables:
     cassandra-cluster:
       type: string

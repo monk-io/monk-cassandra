@@ -8,6 +8,14 @@ cassandra-common:
     website: https://cassandra.apache.org/
     publisher: monk.io
     icon: https://cassandra.apache.org/assets/img/logo-white.svg
+  connections:
+    cassandra1:
+      runnable: monk-cassandra/cassandra1
+      service: monk-cassandra-svc
+    cassandra2:
+      runnable: monk-cassandra/cassandra2
+      service: monk-cassandra-svc
+
   variables:
     cassandra_cluster:
       env: CASSANDRA_CLUSTER_NAME
@@ -18,10 +26,10 @@ cassandra-common:
       value: <- `${monk-volume-path}/cassandra`
     cassandra_node1:
       type: string
-      value: <- get-hostname("monk-cassandra/cassandra1", "monk-cassandra") split(".dns.podman") join("")
+      value: <- connection-hostname("cassandra1") 
     cassandra_node2:
       type: string
-      value: <- get-hostname("monk-cassandra/cassandra2", "monk-cassandra") split(".dns.podman") join("")
+      value: <- connection-hostname("cassandra2")
     cassanra_seeds:
       env: CASSANDRA_SEEDS
       type: string
@@ -29,7 +37,7 @@ cassandra-common:
     cassanra_password:
       env: CASSANDRA_PASSWORD
       type: string
-      value: <- `${cassanra-password}`
+      value: <- `${cassandra-password}`
 
 cassandra1:
   inherits: ./cassandra-common
@@ -43,7 +51,12 @@ cassandra1:
         - <- `${volume_local}/cassandra1:/bitnami`
       environment:
         - CASSANDRA_PASSWORD_SEEDER=yes
-
+        - <- `CASSANDRA_HOST=${cassandra_node1}`
+  services:
+    monk-cassandra-svc:
+      container: monk-cassandra
+      port: 9042
+      protocol: tcp
 
 cassandra2:
   inherits: ./cassandra-common
@@ -55,3 +68,11 @@ cassandra2:
         - <- `0.0.0.0:9043:9042`
       paths:
         - <- `${volume_local}/cassandra2:/bitnami`
+      environment:
+        - <- `CASSANDRA_HOST=${cassandra_node2}`
+  services:
+    monk-cassandra-svc:
+      container: monk-cassandra
+      port: 9042
+      protocol: tcp
+    

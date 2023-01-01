@@ -10,17 +10,22 @@ cassandra:
     icon: https://cassandra.apache.org/assets/img/logo-white.svg
   defines: runnable
   variables:
-    cassandra_cluster:
-      env: CASSANDRA_CLUSTER_NAME
-      type: string
-      value: monk
     volume_local:
       type: string
-      value: <- `${monk-volume-path}/cassandra`
+      value: <- `${monk-volume-path}/cassandra1`
   containers:
     monk-cassandra:
-      image: 'cassandra'
+      image: cassandra
       ports:
         - <- `0.0.0.0:9042:9042`
       paths:
         - <- `${volume_local}:/var/lib/cassandra`
+      environment:
+        - HEAP_NEWSIZE=1024M
+        - MAX_HEAP_SIZE=2048M
+  services:
+    monk-cassandra-svc:
+      container: monk-cassandra
+      port: 9042
+      protocol: tcp
+      host-port: 9042
