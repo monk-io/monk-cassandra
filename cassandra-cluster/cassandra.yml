@@ -1,4 +1,4 @@
-namespace: monk-cassandra
+namespace: cassandra-cluster
 
 cassandra-common:
   metadata:
@@ -10,11 +10,11 @@ cassandra-common:
     icon: https://cassandra.apache.org/assets/img/logo-white.svg
   connections:
     cassandra1:
-      runnable: monk-cassandra/cassandra1
-      service: monk-cassandra-svc
+      runnable: cassandra-cluster/cassandra1
+      service: cassandra-cluster-svc
     cassandra2:
-      runnable: monk-cassandra/cassandra2
-      service: monk-cassandra-svc
+      runnable: cassandra-cluster/cassandra2
+      service: cassandra-cluster-svc
 
   variables:
     cassandra_cluster:
@@ -43,7 +43,7 @@ cassandra1:
   inherits: ./cassandra-common
   defines: runnable
   containers:
-    monk-cassandra:
+    cassandra-cluster:
       image: 'bitnami/cassandra'
       ports:
         - <- `0.0.0.0:9042:9042`
@@ -53,8 +53,8 @@ cassandra1:
         - CASSANDRA_PASSWORD_SEEDER=yes
         - <- `CASSANDRA_HOST=${cassandra_node1}`
   services:
-    monk-cassandra-svc:
-      container: monk-cassandra
+    cassandra-cluster-svc:
+      container: cassandra-cluster
       port: 9042
       protocol: tcp
 
@@ -62,7 +62,7 @@ cassandra2:
   inherits: ./cassandra-common
   defines: runnable
   containers:
-    monk-cassandra:
+    cassandra-cluster:
       image: 'bitnami/cassandra'
       ports:
         - <- `0.0.0.0:9043:9042`
@@ -71,8 +71,8 @@ cassandra2:
       environment:
         - <- `CASSANDRA_HOST=${cassandra_node2}`
   services:
-    monk-cassandra-svc:
-      container: monk-cassandra
+    cassandra-cluster-svc:
+      container: cassandra-cluster
       port: 9042
       protocol: tcp
     

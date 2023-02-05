@@ -1,4 +1,4 @@
-namespace: monk-cassandra
+namespace: cassandra
 
 cassandra:
   metadata:
@@ -14,7 +14,7 @@ cassandra:
       type: string
       value: <- `${monk-volume-path}/cassandra1`
   containers:
-    monk-cassandra:
+    cassandra:
       image: cassandra
       ports:
         - <- `0.0.0.0:9042:9042`
@@ -24,8 +24,8 @@ cassandra:
         - HEAP_NEWSIZE=1024M
         - MAX_HEAP_SIZE=2048M
   services:
-    monk-cassandra-svc:
-      container: monk-cassandra
+    cassandra-svc:
+      container: cassandra
       port: 9042
       protocol: tcp
       host-port: 9042

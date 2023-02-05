@@ -21,51 +21,51 @@ not connected to cluster
 ## Clone Repository
 
 ```bash
-git clone https://github.com/monk-io/monk-cassandra
+git clone https://github.com/monk-io/cassandra
 ```
 
 ## Load Template
 
 ```bash
-cd monk-cassandra
+cd cassandra
 monk load MANIFEST
 ```
 
 ## Let's take a look at the themes I have installed
 
 ```bash
-foo@bar:~$ monk list monk-cassandra
+foo@bar:~$ monk list cassandra
 ✔ Got the list
 Type      Template                  Repository  Version  Tags
-runnable  monk-cassandra/cassandra  local       -        -
-group     monk-cassandra/stack      local       -        -
+runnable  cassandra/cassandra  local       -        -
+group     cassandra/stack      local       -        -
 
 ```
 
 ## Deploy Stack
 
 ```bash
-foo@bar:~$ monk run monk-cassandra/stack
-? Select tag to run [local/monk-cassandra/stack] on: monk
-✔ Starting the job: local/monk-cassandra/stack... DONE
+foo@bar:~$ monk run cassandra/stack
+? Select tag to run [local/cassandra/stack] on: monk
+✔ Starting the job: local/cassandra/stack... DONE
 ✔ Preparing nodes DONE
 ✔ Checking/pulling images...
  [================================>---------------]  68% cassandra:latest monk-2
 ✔ Checking/pulling images DONE
-✔ Started local/monk-cassandra/stack
+✔ Started local/cassandra/stack
 
-🔩 templates/local/monk-cassandra/stack
+🔩 templates/local/cassandra/stack
  └─🧊 Peer monk-2
-    └─🔩 templates/local/monk-cassandra/cassandra
-       └─📦 ca04ec6a626314d46ab8a2a13f8062b3-andra-cassandra-monk-cassandra
+    └─🔩 templates/local/cassandra/cassandra
+       └─📦 ca04ec6a626314d46ab8a2a13f8062b3-andra-cassandra-cassandra
           ├─🧩 cassandra:latest
           ├─💾 /var/lib/monkd/volumes/cassandra -> /var/lib/cassandra
           └─🔌 open 16.170.233.57:9042 (0.0.0.0:9042) -> 9042
 
 💡 You can inspect and manage your above stack with these commands:
- monk logs (-f) local/monk-cassandra/stack - Inspect logs
- monk shell     local/monk-cassandra/stack - Connect to the container's shell
- monk do        local/monk-cassandra/stack/action_name - Run defined action (if exists)
+ monk logs (-f) local/cassandra/stack - Inspect logs
+ monk shell     local/cassandra/stack - Connect to the container's shell
+ monk do        local/cassandra/stack/action_name - Run defined action (if exists)
 💡 Check monk help for more!
 ```
 
@@ -81,5 +81,5 @@ The variables are in `stack.yml` file. You can quickly setup by editing the valu
 ## Stop, remove and clean up workloads and templates
 
 ```bash
-monk purge monk-cassandra
+monk purge cassandra
 ```
