@@ -10,19 +10,20 @@ cassandra:
     icon: https://cassandra.apache.org/assets/img/logo-white.svg
   defines: runnable
   variables:
+    cassandra_password:
+      env: CASSANDRA_PASSWORD
+      type: string
+      value: cassandra
     volume_local:
       type: string
       value: <- `${monk-volume-path}/cassandra1`
   containers:
     cassandra:
-      image: cassandra
+      image: bitnami/cassandra
+      # bash: sleep 3600
       ports:
         - <- `0.0.0.0:9042:9042`
-      paths:
-        - <- `${volume_local}:/var/lib/cassandra`
-      environment:
-        - HEAP_NEWSIZE=1024M
-        - MAX_HEAP_SIZE=2048M
+     
   services:
     cassandra-svc:
       container: cassandra
