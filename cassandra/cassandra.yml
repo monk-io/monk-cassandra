@@ -1,6 +1,6 @@
 ---
 namespace: cassandra
-cassandra:
+base:
   metadata:
     defines: metadata
     name: Cassandra
@@ -15,20 +15,27 @@ cassandra:
     website: https://cassandra.apache.org/
     publisher: monk.io
     icon: https://cassandra.apache.org/assets/img/logo-white.svg
-  defines: runnable
   variables:
     cassandra_password:
       env: CASSANDRA_PASSWORD
       type: string
       value: cassandra
+    image:
+      type: string
+      value: latest
   containers:
-    cassandra:
+    db:
       image: bitnami/cassandra
+      image-tag: <- `${image}`
       paths:
-        - <- `${monk-volume-path}/cassandra:/bitnami`
+        - <- `${monk-volume-path}/cassandra:/bitnami/cassandra`
+
+db:
+  defines: runnable
+  inherits: cassandra/base
   services:
     cassandra-svc:
-      container: cassandra
+      container: db
       port: 9042
       protocol: tcp
       host-port: 9042

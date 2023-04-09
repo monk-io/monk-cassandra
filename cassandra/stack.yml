@@ -1,6 +1,0 @@
----
-namespace: cassandra
-stack:
-  defines: process-group
-  runnable-list:
-    - cassandra/cassandra

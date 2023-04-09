@@ -34,7 +34,6 @@ cassandra-common:
       env: CASSANDRA_PASSWORD
       type: string
       value: <- `${cassandra-password}`
-
 cassandra1:
   inherits: cassandra-cluster/cassandra-common
   defines: runnable
@@ -51,7 +50,6 @@ cassandra1:
       container: cassandra-cluster
       port: 9042
       protocol: tcp
-
 cassandra2:
   inherits: cassandra-cluster/cassandra-common
   defines: runnable
