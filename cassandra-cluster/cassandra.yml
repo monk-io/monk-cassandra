@@ -20,9 +20,6 @@ cassandra-common:
       env: CASSANDRA_CLUSTER_NAME
       type: string
       value: <- `${cassandra-cluster}`
-    volume_local:
-      type: string
-      value: <- `${monk-volume-path}/cassandra`
     cassandra_node1:
       type: string
       value: <- connection-hostname("cassandra1")
@@ -45,7 +42,7 @@ cassandra1:
     cassandra-cluster:
       image: bitnami/cassandra
       paths:
-        - <- `${volume_local}/cassandra1:/bitnami`
+        - <- `${monk-volume-path}/cassandra1:/bitnami`
       environment:
         - CASSANDRA_PASSWORD_SEEDER=yes
         - <- `CASSANDRA_HOST=${cassandra_node1}`
@@ -62,7 +59,7 @@ cassandra2:
     cassandra-cluster:
       image: bitnami/cassandra
       paths:
-        - <- `${volume_local}/cassandra2:/bitnami`
+        - <- `${monk-volume-path}/cassandra2:/bitnami`
       environment:
         - <- `CASSANDRA_HOST=${cassandra_node2}`
   services:

@@ -24,6 +24,8 @@ cassandra:
   containers:
     cassandra:
       image: bitnami/cassandra
+      paths:
+        - <- `${monk-volume-path}/cassandra:/bitnami`
   services:
     cassandra-svc:
       container: cassandra
