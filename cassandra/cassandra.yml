@@ -27,9 +27,6 @@ base:
     db:
       image: bitnami/cassandra
       image-tag: <- `${image}`
-      paths:
-        - <- `${monk-volume-path}/cassandra:/bitnami/cassandra`
-
 db:
   defines: runnable
   inherits: cassandra/base
