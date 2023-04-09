@@ -1,10 +1,17 @@
+---
 namespace: cassandra
-
 cassandra:
   metadata:
     defines: metadata
     name: Cassandra
-    description: Open Source NoSQL Database Manage massive amounts of data, fast, without losing sleep
+    description: |
+      Cassandra uses a column-family data model, which is a hybrid of a key-value and column-oriented data model. Data is stored as rows with multiple columns, and each row is identified by a unique key. This makes Cassandra a highly scalable and flexible database, as it can handle large amounts of structured and unstructured data.
+
+      Cassandra is designed to be highly available and fault-tolerant, with built-in support for data replication and automatic data distribution across multiple nodes. It also supports tunable consistency, allowing developers to choose between strong consistency for critical data and eventual consistency for less critical data.
+
+      Cassandra provides a query language called CQL (Cassandra Query Language), which is similar to SQL in syntax but optimized for handling large datasets. It also includes a number of APIs and drivers for popular programming languages such as Java, Python, and Ruby.
+
+      Overall, Cassandra is a powerful and flexible NoSQL database management system that is well-suited for handling large amounts of data across multiple servers with high availability and fault tolerance. It is used in a wide range of applications, including financial services, e-commerce, and social networking.
     website: https://cassandra.apache.org/
     publisher: monk.io
     icon: https://cassandra.apache.org/assets/img/logo-white.svg
@@ -14,16 +21,9 @@ cassandra:
       env: CASSANDRA_PASSWORD
       type: string
       value: cassandra
-    volume_local:
-      type: string
-      value: <- `${monk-volume-path}/cassandra1`
   containers:
     cassandra:
       image: bitnami/cassandra
-      # bash: sleep 3600
-      ports:
-        - <- `0.0.0.0:9042:9042`
-     
   services:
     cassandra-svc:
       container: cassandra

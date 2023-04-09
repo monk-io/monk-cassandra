@@ -1,5 +1,5 @@
+---
 namespace: cassandra-cluster
-
 cassandra-common:
   metadata:
     defines: metadata
@@ -15,7 +15,6 @@ cassandra-common:
     cassandra2:
       runnable: cassandra-cluster/cassandra2
       service: cassandra-cluster-svc
-
   variables:
     cassandra_cluster:
       env: CASSANDRA_CLUSTER_NAME
@@ -26,7 +25,7 @@ cassandra-common:
       value: <- `${monk-volume-path}/cassandra`
     cassandra_node1:
       type: string
-      value: <- connection-hostname("cassandra1") 
+      value: <- connection-hostname("cassandra1")
     cassandra_node2:
       type: string
       value: <- connection-hostname("cassandra2")
@@ -40,13 +39,11 @@ cassandra-common:
       value: <- `${cassandra-password}`
 
 cassandra1:
-  inherits: ./cassandra-common
+  inherits: cassandra-cluster/cassandra-common
   defines: runnable
   containers:
     cassandra-cluster:
-      image: 'bitnami/cassandra'
-      ports:
-        - <- `0.0.0.0:9042:9042`
+      image: bitnami/cassandra
       paths:
         - <- `${volume_local}/cassandra1:/bitnami`
       environment:
@@ -59,13 +56,11 @@ cassandra1:
       protocol: tcp
 
 cassandra2:
-  inherits: ./cassandra-common
+  inherits: cassandra-cluster/cassandra-common
   defines: runnable
   containers:
     cassandra-cluster:
-      image: 'bitnami/cassandra'
-      ports:
-        - <- `0.0.0.0:9043:9042`
+      image: bitnami/cassandra
       paths:
         - <- `${volume_local}/cassandra2:/bitnami`
       environment:
@@ -75,4 +70,3 @@ cassandra2:
       container: cassandra-cluster
       port: 9042
       protocol: tcp
-    
