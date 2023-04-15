@@ -81,10 +81,10 @@ foo@bar:~$ monk run cassandra-cluster/stack
 
 The variables are in `stack.yml` file. You can quickly setup by editing the values here.
 
-| Variable                      | Description                                |
-|------------------------------ |------------------------------------------- |
-| cassandra-password             | cassandra password, Default: monk                 |
-| cassandra-cluster              | Cassandra cluster name, Default: monk                 |
+| Variable           | Description                           | Default |
+| ------------------ | ------------------------------------- | ------- |
+| cassandra-password | cassandra password, Default: monk     | monk    |
+| cassandra-cluster  | Cassandra cluster name, Default: monk | monk    |
 
 ## Stop, remove and clean up workloads and templates
 

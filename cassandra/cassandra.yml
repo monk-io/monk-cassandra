@@ -27,12 +27,13 @@ base:
     db:
       image: bitnami/cassandra
       image-tag: <- `${image}`
-db:
-  defines: runnable
-  inherits: cassandra/base
   services:
     cassandra-svc:
       container: db
       port: 9042
       protocol: tcp
       host-port: 9042
+
+db:
+  defines: runnable
+  inherits: cassandra/base

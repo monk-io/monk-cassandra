@@ -1,25 +1,20 @@
 ---
 namespace: cassandra-cluster
-cassandra-common:
-  metadata:
-    defines: metadata
-    name: Cassandra
-    description: Open Source NoSQL Database Manage massive amounts of data, fast, without losing sleep
-    website: https://cassandra.apache.org/
-    publisher: monk.io
-    icon: https://cassandra.apache.org/assets/img/logo-white.svg
+
+base:
+  inherits: cassandra/base
   connections:
     cassandra1:
       runnable: cassandra-cluster/cassandra1
-      service: cassandra-cluster-svc
+      service: cassandra-svc
     cassandra2:
       runnable: cassandra-cluster/cassandra2
-      service: cassandra-cluster-svc
+      service: cassandra-svc
   variables:
     cassandra_cluster:
       env: CASSANDRA_CLUSTER_NAME
       type: string
-      value: <- `${cassandra-cluster}`
+      value: monk
     cassandra_node1:
       type: string
       value: <- connection-hostname("cassandra1")
@@ -33,35 +28,24 @@ cassandra-common:
     cassanra_password:
       env: CASSANDRA_PASSWORD
       type: string
-      value: <- `${cassandra-password}`
-cassandra1:
+      value: monk
+
+master:
   inherits: cassandra-cluster/cassandra-common
   defines: runnable
   containers:
-    cassandra-cluster:
-      image: bitnami/cassandra
-      paths:
-        - <- `${monk-volume-path}/cassandra1:/bitnami`
+    db:
       environment:
         - CASSANDRA_PASSWORD_SEEDER=yes
         - <- `CASSANDRA_HOST=${cassandra_node1}`
-  services:
-    cassandra-cluster-svc:
-      container: cassandra-cluster
-      port: 9042
-      protocol: tcp
-cassandra2:
+
+slave:
   inherits: cassandra-cluster/cassandra-common
   defines: runnable
   containers:
-    cassandra-cluster:
+    db:
       image: bitnami/cassandra
       paths:
         - <- `${monk-volume-path}/cassandra2:/bitnami`
       environment:
         - <- `CASSANDRA_HOST=${cassandra_node2}`
-  services:
-    cassandra-cluster-svc:
-      container: cassandra-cluster
-      port: 9042
-      protocol: tcp

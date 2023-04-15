@@ -1,2 +1,2 @@
-REPO cassandra
+REPO cassandra-cluster
 LOAD cassandra.yml stack.yml

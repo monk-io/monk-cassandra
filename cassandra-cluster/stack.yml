@@ -1,14 +1,8 @@
 ---
 namespace: cassandra-cluster
+
 stack:
   defines: process-group
   runnable-list:
-    - cassandra-cluster/cassandra2
-    - cassandra-cluster/cassandra1
-  variables:
-    cassandra-cluster:
-      type: string
-      value: monk
-    cassandra-password:
-      type: string
-      value: monk
+    - cassandra-cluster/slave
+    - cassandra-cluster/master
