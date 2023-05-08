@@ -2,50 +2,94 @@
 namespace: cassandra-cluster
 
 base:
-  inherits: cassandra/base
+  defines: runnable
+  metadata:
+    name: Cassandra
+    description: |
+      Cassandra uses a column-family data model, which is a hybrid of a key-value and column-oriented data model. Data is stored as rows with multiple columns, and each row is identified by a unique key. This makes Cassandra a highly scalable and flexible database, as it can handle large amounts of structured and unstructured data.
+
+      Cassandra is designed to be highly available and fault-tolerant, with built-in support for data replication and automatic data distribution across multiple nodes. It also supports tunable consistency, allowing developers to choose between strong consistency for critical data and eventual consistency for less critical data.
+
+      Cassandra provides a query language called CQL (Cassandra Query Language), which is similar to SQL in syntax but optimized for handling large datasets. It also includes a number of APIs and drivers for popular programming languages such as Java, Python, and Ruby.
+
+      Overall, Cassandra is a powerful and flexible NoSQL database management system that is well-suited for handling large amounts of data across multiple servers with high availability and fault tolerance. It is used in a wide range of applications, including financial services, e-commerce, and social networking.
+    website: https://cassandra.apache.org/
+    publisher: monk.io
+    icon: https://cassandra.apache.org/assets/img/logo-white.svg
+    source: https://github.com/apache/cassandra
+    tags: Cassandra, Database Management, NoSQL, Distributed Computing, High-Availability, Scalability, Big Data Analytics, Data Warehousing, Cloud Computing, Column-Family Data Model, Apache Cassandra, Data Replication, Data Partitioning, Data Consistency, Open Source Database
+    private: true
+  containers:
+    db:
+      image: bitnami/cassandra
+      image-tag: latest
+      bash: sleep 10; /bin/bash /opt/bitnami/scripts/cassandra/entrypoint.sh /opt/bitnami/scripts/cassandra/run.sh
   connections:
-    cassandra1:
-      runnable: cassandra-cluster/cassandra1
-      service: cassandra-svc
-    cassandra2:
-      runnable: cassandra-cluster/cassandra2
-      service: cassandra-svc
+    master:
+      runnable: cassandra-cluster/master
+      service: transport
+    slave:
+      runnable: cassandra-cluster/slave
+      service: transport
   variables:
     cassandra_cluster:
       env: CASSANDRA_CLUSTER_NAME
       type: string
       value: monk
-    cassandra_node1:
-      type: string
-      value: <- connection-hostname("cassandra1")
-    cassandra_node2:
-      type: string
-      value: <- connection-hostname("cassandra2")
     cassanra_seeds:
       env: CASSANDRA_SEEDS
       type: string
-      value: <- `${cassandra_node1},${cassandra_node2}`
+      value: <- connection-hostname("master") "," connection-hostname("slave") concat-all
     cassanra_password:
       env: CASSANDRA_PASSWORD
       type: string
       value: monk
 
 master:
-  inherits: cassandra-cluster/cassandra-common
   defines: runnable
+  inherits: cassandra-cluster/base
   containers:
     db:
-      environment:
-        - CASSANDRA_PASSWORD_SEEDER=yes
-        - <- `CASSANDRA_HOST=${cassandra_node1}`
+      paths:
+        - <- `${monk-volume-path}/cassandra/cassandra-master:/bitnami`
+  variables:
+    seeder:
+      env: CASSANDRA_PASSWORD_SEEDER
+      type: string
+      value: 'yes'
+    node:
+      env: CASSANDRA_HOST
+      type: string
+      value: <- connection-hostname("master")
+  services:
+    transport:
+      container: db
+      port: 7000
+      protocol: tcp
+    cassandra:
+      container: db
+      port: 9042
+      protocol: tcp
+      host-port: 9042
 
 slave:
-  inherits: cassandra-cluster/cassandra-common
   defines: runnable
+  inherits: cassandra-cluster/base
   containers:
     db:
-      image: bitnami/cassandra
       paths:
-        - <- `${monk-volume-path}/cassandra2:/bitnami`
-      environment:
-        - <- `CASSANDRA_HOST=${cassandra_node2}`
+        - <- `${monk-volume-path}/cassandra/cassandra-slave:/bitnami`
+  variables:
+    node:
+      env: CASSANDRA_HOST
+      type: string
+      value: <- connection-hostname("slave")
+  services:
+    transport:
+      container: db
+      port: 7000
+      protocol: tcp
+    cassandra:
+      container: db
+      port: 9042
+      protocol: tcp
