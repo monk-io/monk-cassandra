@@ -1,2 +1,2 @@
-REPO monk-cassandra 
-DIR cassandra cassandra-cluster
+REPO monk-cassandra
+DIR cassandra
