@@ -1,8 +1,9 @@
 ---
 namespace: cassandra
+
 base:
+  defines: runnable
   metadata:
-    defines: metadata
     name: Cassandra
     description: |
       Cassandra uses a column-family data model, which is a hybrid of a key-value and column-oriented data model. Data is stored as rows with multiple columns, and each row is identified by a unique key. This makes Cassandra a highly scalable and flexible database, as it can handle large amounts of structured and unstructured data.
@@ -15,25 +16,27 @@ base:
     website: https://cassandra.apache.org/
     publisher: monk.io
     icon: https://cassandra.apache.org/assets/img/logo-white.svg
+    source: https://github.com/apache/cassandra
+    tags: Cassandra, Database Management, NoSQL, Distributed Computing, High-Availability, Scalability, Big Data Analytics, Data Warehousing, Cloud Computing, Column-Family Data Model, Apache Cassandra, Data Replication, Data Partitioning, Data Consistency, Open Source Database
+    private: true
+  containers:
+    db:
+      image: bitnami/cassandra
+      image-tag: latest
+
+db:
+  defines: runnable
+  inherits: cassandra/base
+  metadata:
+    private: false
   variables:
     cassandra_password:
       env: CASSANDRA_PASSWORD
       type: string
       value: cassandra
-    image:
-      type: string
-      value: latest
-  containers:
-    db:
-      image: bitnami/cassandra
-      image-tag: <- `${image}`
   services:
     cassandra-svc:
       container: db
       port: 9042
       protocol: tcp
       host-port: 9042
-
-db:
-  defines: runnable
-  inherits: cassandra/base

@@ -45,16 +45,16 @@ group     cassandra/stack      local       -        -
 ## Deploy Stack
 
 ```bash
-foo@bar:~$ monk run cassandra/stack
-? Select tag to run [local/cassandra/stack] on: monk
-✔ Starting the job: local/cassandra/stack... DONE
+foo@bar:~$ monk run cassandra/db
+? Select tag to run [local/cassandra/db] on: monk
+✔ Starting the job: local/cassandra/db... DONE
 ✔ Preparing nodes DONE
 ✔ Checking/pulling images...
  [================================>---------------]  68% cassandra:latest monk-2
 ✔ Checking/pulling images DONE
-✔ Started local/cassandra/stack
+✔ Started local/cassandra/db
 
-🔩 templates/local/cassandra/stack
+🔩 templates/local/cassandra/db
  └─🧊 Peer monk-2
     └─🔩 templates/local/cassandra/cassandra
        └─📦 ca04ec6a626314d46ab8a2a13f8062b3-andra-cassandra-cassandra
@@ -62,10 +62,10 @@ foo@bar:~$ monk run cassandra/stack
           ├─💾 /var/lib/monkd/volumes/cassandra -> /var/lib/cassandra
           └─🔌 open 16.170.233.57:9042 (0.0.0.0:9042) -> 9042
 
-💡 You can inspect and manage your above stack with these commands:
- monk logs (-f) local/cassandra/stack - Inspect logs
- monk shell     local/cassandra/stack - Connect to the container's shell
- monk do        local/cassandra/stack/action_name - Run defined action (if exists)
+💡 You can inspect and manage your above db with these commands:
+ monk logs (-f) local/cassandra/db - Inspect logs
+ monk shell     local/cassandra/db - Connect to the container's shell
+ monk do        local/cassandra/db/action_name - Run defined action (if exists)
 💡 Check monk help for more!
 ```
 
@@ -73,10 +73,9 @@ foo@bar:~$ monk run cassandra/stack
 
 The variables are in `stack.yml` file. You can quickly setup by editing the values here.
 
-| Variable           | Description               | Default |
-| ------------------ | ------------------------- | ------- |
-| cassandra-cluster  | Name of Cassandra Cluster | monk    |
-| cassandra-password | Cassandra password        | monk    |
+| Variable           | Description        | Default |
+| ------------------ | ------------------ | ------- |
+| cassandra-password | Cassandra password | monk    |
 
 ## Stop, remove and clean up workloads and templates
 
