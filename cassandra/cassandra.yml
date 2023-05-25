@@ -17,7 +17,7 @@ base:
     publisher: monk.io
     icon: https://cassandra.apache.org/assets/img/logo-white.svg
     source: https://github.com/apache/cassandra
-    tags: Cassandra, Database Management, NoSQL, Distributed Computing, High-Availability, Scalability, Big Data Analytics, Data Warehousing, Cloud Computing, Column-Family Data Model, Apache Cassandra, Data Replication, Data Partitioning, Data Consistency, Open Source Database
+    tags: data partitioning, database management, apache cassandra, data replication, data consistency, data warehousing, scalability, big data analytics, open source database, nosql, distributed computing, high-availability, column-family data model
     private: true
   containers:
     db:
