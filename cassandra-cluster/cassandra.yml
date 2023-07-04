@@ -5,10 +5,10 @@ base:
   inherits: cassandra/base
   connections:
     cassandra1:
-      runnable: cassandra-cluster/cassandra1
+      runnable: cassandra-cluster/master
       service: cassandra-svc
     cassandra2:
-      runnable: cassandra-cluster/cassandra2
+      runnable: cassandra-cluster/slave
       service: cassandra-svc
   variables:
     cassandra_cluster:
@@ -25,13 +25,13 @@ base:
       env: CASSANDRA_SEEDS
       type: string
       value: <- `${cassandra_node1},${cassandra_node2}`
-    cassanra_password:
+    cassandra_password:
       env: CASSANDRA_PASSWORD
       type: string
       value: monk
 
 master:
-  inherits: cassandra-cluster/cassandra-common
+  inherits: cassandra-cluster/base
   defines: runnable
   containers:
     db:
@@ -40,11 +40,10 @@ master:
         - <- `CASSANDRA_HOST=${cassandra_node1}`
 
 slave:
-  inherits: cassandra-cluster/cassandra-common
+  inherits: cassandra-cluster/base
   defines: runnable
   containers:
     db:
-      image: bitnami/cassandra
       paths:
         - <- `${monk-volume-path}/cassandra2:/bitnami`
       environment:
