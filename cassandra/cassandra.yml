@@ -21,7 +21,7 @@ base:
     private: true
   containers:
     db:
-      image: bitnami/cassandra
+      image: bitnamilegacy/cassandra
       image-tag: latest
 
 db:
