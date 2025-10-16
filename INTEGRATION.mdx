@@ -1,0 +1,122 @@
+---
+title: Apache Cassandra
+description: Ready-to-run Apache Cassandra container template you can run directly or inherit to integrate a distributed NoSQL database into your stack.
+primary_category: database
+tags: [cassandra, nosql, database, template, runnable, distributed, wide-column]
+integration_type: template
+hosting_models: [self-hosted]
+website_url: https://cassandra.apache.org/
+docs_url: https://cassandra.apache.org/doc/latest/
+publisher: monk.io
+---
+
+## Overview
+
+This template provides a production‑ready Apache Cassandra instance as a Monk runnable. You can:
+
+- Run it directly to get a managed Cassandra container with sensible defaults
+- Inherit it in your own runnable to seamlessly add a distributed wide-column NoSQL database to your stack
+
+Apache Cassandra is a highly scalable, distributed NoSQL database designed to handle large amounts of data across many commodity servers, providing high availability with no single point of failure.
+
+## What this template manages
+
+- Cassandra container (`cassandra` image, configurable tag)
+- Network service on port 9042 (CQL native transport)
+- Persistent volumes for data storage
+- Authentication configuration
+
+## Quick start (run directly)
+
+1) Load templates
+
+```bash
+monk load MANIFEST
+```
+
+2) Run Cassandra with defaults
+
+```bash
+monk run cassandra/cassandra
+```
+
+3) Customize credentials (recommended via inheritance)
+
+Running directly uses the defaults defined in this template's `variables`. Secrets added with `monk secrets add` will not affect this runnable unless you inherit it and reference those secrets.
+
+- Preferred: inherit and replace variables with `secret("...")` as shown below.
+- Alternative: fork/clone and edit the `variables` in `cassandra/cassandra.yml`, then `monk load MANIFEST` and run.
+
+Once started, connect to `localhost:9042` (or the runnable hostname inside Monk networks) using CQL.
+
+## Configuration
+
+Key variables you can customize in this template:
+
+```yaml
+variables:
+  cassandra-image: "latest"              # container image tag
+  cassandra-password: "monk"             # Cassandra password (env: CASSANDRA_PASSWORD)
+```
+
+Data is persisted under `${monk-volume-path}/cassandra` on the host.
+
+## Use by inheritance (recommended for apps)
+
+Inherit the Cassandra runnable in your application and declare a connection. Example:
+
+```yaml
+namespace: myapp
+db:
+  defines: runnable
+  inherits: cassandra/cassandra
+api:
+  defines: runnable
+  containers:
+    api:
+      image: myorg/api
+  connections:
+    database:
+      runnable: db
+      service: cassandra
+  variables:
+    database-host:
+      value: <- connection-hostname("database")
+    database-password:
+      value: <- secret("cassandra-password")
+```
+
+Then set the secrets once and run your app group:
+
+```bash
+monk secrets add -g cassandra-password="STRONG_PASSWORD"
+monk run myapp/api
+```
+
+## Ports and connectivity
+
+- Service: `cassandra` on TCP port `9042` (CQL native transport)
+- From other runnables in the same process group, use `connection-hostname("<connection-name>")` to resolve the DB host.
+
+## Persistence and configuration
+
+- Data path: `${monk-volume-path}/cassandra:/var/lib/cassandra`
+- Cassandra stores all keyspaces, tables, and data in this directory
+
+## Related templates
+
+- Cassandra cluster: see the `cassandra-cluster/` template in this repository for a multi-node cluster setup with seed nodes
+- Combine with `spark/` for analytics workloads
+- Use with `prometheus-grafana/` for monitoring and metrics
+
+## Troubleshooting
+
+- Cassandra may take several minutes to start, especially on first launch
+- If you changed `cassandra-password` but the container has existing data, authentication may fail. Either reset the data volume or update the password inside Cassandra to match.
+- Ensure the host volumes are writable by the container user.
+- Check logs:
+
+```bash
+monk logs -l 500 -f local/cassandra/cassandra
+```
+
