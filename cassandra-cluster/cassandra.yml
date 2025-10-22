@@ -5,10 +5,10 @@ base:
   inherits: cassandra/base
   connections:
     cassandra1:
-      runnable: cassandra-cluster/master
+      runnable: cassandra-cluster/leader
       service: cassandra-svc
     cassandra2:
-      runnable: cassandra-cluster/slave
+      runnable: cassandra-cluster/follower
       service: cassandra-svc
   variables:
     cassandra_cluster:
@@ -30,7 +30,7 @@ base:
       type: string
       value: monk
 
-master:
+leader:
   inherits: cassandra-cluster/base
   defines: runnable
   containers:
@@ -39,7 +39,7 @@ master:
         - CASSANDRA_PASSWORD_SEEDER=yes
         - <- `CASSANDRA_HOST=${cassandra_node1}`
 
-slave:
+follower:
   inherits: cassandra-cluster/base
   defines: runnable
   containers:
